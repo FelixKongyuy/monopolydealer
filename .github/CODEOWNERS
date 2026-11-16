@@ -1,0 +1,10 @@
+# Frozen interface headers. Any pull request that changes one of these
+# automatically requests Felix's review. Add each teammate's GitHub username
+# next to the modules they own once everyone has joined the repo.
+
+/lib/core/Types.h        @FelixKongyuy
+/lib/core/Money.h        @FelixKongyuy
+/lib/core/ChangeMaker.h  @FelixKongyuy
+/lib/core/Ledger.h       @FelixKongyuy
+/lib/hal/I*.h            @FelixKongyuy
+/platformio.ini          @FelixKongyuy
