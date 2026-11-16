@@ -1,0 +1,41 @@
+# ===== PlatformIO =====
+# Build output, downloaded libraries (libdeps), native test builds
+.pio/
+
+# ===== CLion / JetBrains =====
+.idea/
+cmake-build-*/
+CMakeListsPrivate.txt
+
+# ===== VS Code =====
+# Ignore personal settings, but share the "recommended extensions" file
+.vscode/*
+!.vscode/extensions.json
+
+# ===== Arduino IDE =====
+# "Export compiled binary" output
+build/
+
+# ===== Compiled files (any toolchain) =====
+*.o
+*.a
+*.elf
+*.hex
+*.bin
+*.map
+*.d
+
+# ===== clangd / code-indexing tools =====
+.cache/
+compile_commands.json
+
+# ===== OS junk =====
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ===== Editor temp files =====
+*~
+*.swp
+*.swo
+*.bak
