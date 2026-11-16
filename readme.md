@@ -16,13 +16,12 @@ Four rules with no exceptions. If you only read one part of this README, read th
 **Contents**
 
 1. [Team and who owns what](#1-team-and-who-owns-what)
-2. [Code structure](#3-code-structure)
-3. [One-time setup](#4-one-time-setup)
-4. [Your daily workflow (step by step)](#5-your-daily-workflow-step-by-step)
-5. [Pull request rules](#6-pull-request-rules)
-6. [Coding rules](#7-coding-rules)
-7. [Common problems](#8-common-problems)
-8. [Glossary](#9-glossary)
+2. [Code structure](#2-code-structure)
+3. [One-time setup](#3-one-time-setup)
+4. [Your daily workflow (step by step)](#4-your-daily-workflow-step-by-step)
+5. [Pull request rules](#5-pull-request-rules)
+6. [Coding rules](#6-coding-rules)
+7. [Glossary](#7-glossary)
 
 ---
 
@@ -42,24 +41,7 @@ If you own a file, you write it and you review changes other people make to it.
 
 ---
 
-## 2. Hardware at a glance
-
-| Part | Job | Connects through |
-|---|---|---|
-| Elegoo Uno R3 | The brain (2 KB RAM, 32 KB flash) | |
-| 28BYJ-48 stepper + ULN2003 driver | Turns the 7-slot carousel | 4 digital pins |
-| Home switch | Tells the carousel where slot 0 is | 1 digital pin |
-| 2 DC motors + motor driver | Input roller and output roller | PWM and direction pins |
-| APDS9960 colour sensor | Reads each bill's colour | I2C |
-| 16x2 LCD with I2C backpack | Shows menus and amounts | I2C |
-| 4x4 keypad + PCF8574 expander | Players type amounts | I2C |
-| Pass GO button | One press pays out $200 | 1 digital pin |
-
-The LCD, colour sensor and keypad all share the same two I2C wires (A4 = SDA, A5 = SCL). Each one has its own address, and that's how the Arduino tells them apart.
-
----
-
-## 3. Code structure
+## 2. Code structure
 
 Files marked *(planned)* don't exist yet. They show where new code should go.
 
@@ -119,7 +101,7 @@ This means nobody has to wait for anyone else. Aung can test the banker logic wi
 
 ---
 
-## 4. One-time setup
+## 3. One-time setup
 
 Do this once on your own laptop.
 
@@ -151,7 +133,7 @@ pio test -e native
 
 ---
 
-## 5. Your daily workflow (step by step)
+## 4. Your daily workflow (step by step)
 
 Never edit `main` directly. `main` is the shared copy that always works. You work on your own **branch** (a private copy), then ask to add your changes to `main` with a **pull request**.
 
@@ -261,7 +243,7 @@ git push -u origin feat/my-task
 
 ---
 
-## 6. Pull request rules
+## 5. Pull request rules
 
 `main` is protected, so GitHub enforces these:
 
@@ -291,19 +273,19 @@ Homing gives up after 1 full turn and returns HardwareFault.
 - [ ] `pio run` builds with no errors
 - [ ] New logic in `lib/core/` has a test in `test/test_core/`
 - [ ] No pin numbers outside `include/config/pins.h`
-- [ ] No `delay()`, `String` or `new` (see [Coding rules](#7-coding-rules))
+- [ ] No `delay()`, `String` or `new` (see [Coding rules](#6-coding-rules))
 - [ ] The pull request does one thing
 
 ### When you're the reviewer
 
 - Check that it does what the description says.
-- Check the [coding rules](#7-coding-rules).
+- Check the [coding rules](#6-coding-rules).
 - Be specific and kind: "This could overflow if amount > 32,767, can we use int32_t?" helps more than "wrong type".
 - Approve when you'd be happy for it to run during the demo.
 
 ---
 
-## 7. Coding rules
+## 6. Coding rules
 
 The Uno has only **2 KB of RAM**, which is less than this README. Most of these rules come from that.
 
@@ -343,33 +325,7 @@ class DcRoller : public IRoller {
 
 ---
 
-## 8. Common problems
-
-**`pio` is not recognized**
-PlatformIO is installed but its folder isn't on your PATH. Either run `python -m platformio` instead of `pio`, or add the PlatformIO `Scripts` folder to your PATH (Windows: search "Edit environment variables for your account", then Path, Edit, New) and restart your editor.
-
-**`fatal: The current branch ... has no upstream branch`**
-It's the first push of a new branch. Use `git push -u origin your-branch-name`.
-
-**CI is red**
-Open the pull request, click **Details** next to the ✗, and read the first error. It's usually the same error you'd get from `pio test -e native` or `pio run` on your laptop, so run those to reproduce it.
-
-**`undefined reference to ...` when building**
-A function is declared in a `.h` file but nobody has written its `.cpp` yet. Check with the owner of that file.
-
-**Merge conflict**
-You and someone else changed the same lines. On your branch:
-```bash
-git pull origin main
-```
-Open each file Git lists, find the `<<<<<<<` and `>>>>>>>` markers, keep the right code, delete the markers, then `git add` and `git commit`. If you're unsure, ask Felix before guessing.
-
-**I committed to `main` by mistake**
-Don't push. Ask Felix, and the commit can be moved onto a branch.
-
----
-
-## 9. Glossary
+## 7. Glossary
 
 | Term | Meaning |
 |---|---|
