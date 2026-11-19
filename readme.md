@@ -53,9 +53,9 @@ monopolydealer/
 ├── .github/
 │   ├── CODEOWNERS            # who must review changes to which files
 │   └── workflows/ci.yml      # GitHub builds and tests every pull request
-├── include/config/           # (planned)
+├── include/config/
 │   ├── pins.h                # every pin number lives here and only here (Zen)
-│   └── calibration.h         # colour thresholds, slot positions, roller timings
+│   └── calibration.h         # (planned) colour thresholds, slot positions, roller timings
 ├── lib/
 │   ├── core/                 # pure logic, NO Arduino.h, runs on a laptop
 │   │   ├── Types.h           # Result error codes, ColorReading
@@ -63,23 +63,33 @@ monopolydealer/
 │   │   ├── ChangeMaker.h     # works out which bills to pay out (Aung)
 │   │   ├── Ledger.h          # how many bills are in each slot (Aung)
 │   │   └── *.cpp             # (planned) the code behind those headers
-│   ├── hal/                  # one class per hardware part
-│   │   ├── IColorSensor.h    # interface (Osy)
-│   │   ├── ICarousel.h       # interface (Milo)
-│   │   ├── IRoller.h         # interface (Milo)
-│   │   ├── IKeypad.h         # interface (Minh)
-│   │   ├── IDisplay.h        # interface (Minh)
-│   │   ├── IButton.h         # interface (Aung)
-│   │   └── ...               # (planned) the real drivers, e.g. StepperCarousel.cpp
-│   └── app/                  # (planned)
-│       └── BankerStateMachine.*   # Idle -> Enter amount -> Sort -> Pay out
+│   ├── hal/                  # interfaces only: what each hardware part can do
+│   │   ├── IColorSensor.h    # (Osy)
+│   │   ├── ICarousel.h       # (Milo)
+│   │   ├── IRoller.h         # (Milo)
+│   │   ├── IKeypad.h         # (Minh)
+│   │   ├── IDisplay.h        # (Minh)
+│   │   └── IButton.h         # (Aung)
+│   ├── drivers/              # Arduino code that makes real parts follow those interfaces
+│   │   ├── LcdDisplay.*      # parallel LCD1602 (Minh)
+│   │   ├── MatrixKeypad.*    # 4x4 membrane keypad on 8 pins (Minh)
+│   │   ├── DebouncedButton.* # Pass GO button (Aung)
+│   │   └── ...               # (planned) StepperCarousel, DcRoller, Apds9960Sensor
+│   └── app/                  # decides what happens next, NO Arduino.h
+│       ├── PlayerInterface.* # menus on the LCD and keypad (Minh)
+│       ├── IBank.h           # what the menus need from the backend (Aung, draft)
+│       ├── SimulatedBank.h   # fake backend so the menus run before the motors do
+│       └── BankerStateMachine.*   # (planned) Idle -> Enter amount -> Sort -> Pay out
 ├── src/
 │   └── main.cpp              # creates every part and calls update() in loop()
 └── test/
-    ├── test_core/            # unit tests that run on your laptop
-    ├── mocks/                # (planned) fake hardware for testing
+    ├── test_core/            # unit tests for lib/core
+    ├── test_player_interface/  # unit tests for the menus
+    ├── mocks/                # fake hardware and backend for the tests
     └── hardware/             # (planned) small test programs for each real part
 ```
+
+`lib/drivers/` is the only library folder that uses `Arduino.h`. The laptop tests skip it (`lib_ignore = drivers` in `platformio.ini`), so everything else can be tested without a board.
 
 ### How the pieces fit together
 
@@ -88,7 +98,7 @@ The code has three layers. Each layer only talks to the one below it.
 | Layer | Folder | What it does | Example |
 |---|---|---|---|
 | App | `lib/app/` | Decides what happens next | "Player pressed #, so start paying out $236" |
-| Hardware (HAL) | `lib/hal/` | Makes one physical part do one thing | "Turn the carousel to slot 3" |
+| Hardware (HAL) | `lib/hal/` + `lib/drivers/` | Makes one physical part do one thing | "Turn the carousel to slot 3" |
 | Core | `lib/core/` | Maths and bookkeeping, no hardware | "$236 = 2 x $100 + 1 x $20 + 1 x $10 + 1 x $5 + 1 x $1" |
 
 ### What the `I` files are (interfaces)
@@ -177,7 +187,7 @@ Fix anything red before moving on.
 
 ```bash
 git status                       # see what you changed
-git add lib/hal/StepperCarousel.cpp lib/hal/StepperCarousel.h
+git add lib/drivers/StepperCarousel.cpp lib/drivers/StepperCarousel.h
 git commit -m "Add stepper homing with home switch"
 ```
 

@@ -1,5 +1,6 @@
-// IKeypad.h - the 4x4 keypad, read through the PCF8574 I2C expander.
-// Owner: Minh.
+// IKeypad.h - the 4x4 keypad.
+// Owner: Minh. Current driver: MatrixKeypad (8 Uno pins). Planned: a
+// PCF8574 I2C expander driver, which frees those pins.
 //
 // FROZEN v1 (2026-11-15). Change only through a pull request reviewed by
 // Felix and by the owner of every module that uses it.
@@ -9,7 +10,8 @@
 //  - getKey() returns each key press exactly once, already debounced, or
 //    kNoKey when there is no new press.
 //  - Keys: '0'-'9', 'A'-'D', '*', '#'.
-//    UI convention: '#' = enter, '*' = clear / back.
+//    UI convention (PlayerInterface): '#' = enter / yes, '*' = delete digit,
+//    'D' = back / cancel, 'A' / 'B' / 'C' = withdraw / deposit / pay.
 
 #pragma once
 
