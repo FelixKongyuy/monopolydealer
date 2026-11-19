@@ -24,3 +24,5 @@ monopoly-banker/
     ├── test_core/        # native unit tests (you + Aung)
     ├── mocks/            # FakeCarousel, FakeSensor, etc.
     └── hardware/         # one small test sketch per part (servo/stepper sweep, roller feed)
+
+Hello
