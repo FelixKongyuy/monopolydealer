@@ -72,7 +72,7 @@ void PlayerInterface::handleMenuKey(char key) {
 
 void PlayerInterface::handleTypingKey(char key) {
   if (key >= '0' && key <= '9') {
-    if (digitCount_ == 0 && key == '0') return;  // no leading zeros okay
+    if (digitCount_ == 0 && key == '0') return;  // no leading zeros okayno
     if (digitCount_ < kMaxDigits) {
       amount_ = amount_ * 10 + (key - '0');
       ++digitCount_;
