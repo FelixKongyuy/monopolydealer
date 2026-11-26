@@ -1,21 +1,5 @@
 #include "ChangeMaker.h"
 
-Result makeChange(int32_t amount, const BillCounts& stock, BillCounts& out) {
-  out = emptyCounts();
-
-  if (amount < 0) {
-    return Result::InvalidArgument;
-  }
-  if (amount == 0) {
-    return Result::Ok;
-  }
-  if (totalValue(stock) < amount) {
-    return Result::InsufficientStock;
-  }
-
-  // Step 2: Depth-first search will go here
-  return Result::CannotMakeAmount;
-}
 namespace {
 
 void searchChange(int8_t index, int32_t remaining, uint16_t billsUsed,
