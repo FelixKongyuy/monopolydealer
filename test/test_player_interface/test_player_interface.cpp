@@ -122,7 +122,7 @@ void test_jam_shows_error() {
   TEST_ASSERT_EQUAL_STRING("ERROR: bill jam", r.line(0));
 }
 
-void test_deposit_shows_counted_total() {
+void test_deposit_returns_to_menu() {
   Rig r;
   r.press('B');
   TEST_ASSERT_EQUAL_INT(1, r.bank.countingCount);
@@ -130,7 +130,7 @@ void test_deposit_shows_counted_total() {
 
   r.bank.finishCounting(350);
   r.tick(10);
-  TEST_ASSERT_EQUAL_STRING("Deposited $350", r.line(0));
+  TEST_ASSERT_EQUAL_STRING("A:Withdraw B:Dep", r.line(0));
 }
 
 // The key test case from the deck: pay $500 for $264 rent, get $236 back.
@@ -145,11 +145,13 @@ void test_pay_500_for_264_gives_236_change() {
   r.bank.finishCounting(500);
   r.tick(10);
   TEST_ASSERT_EQUAL_INT32(236, r.bank.lastPayOut);
-  TEST_ASSERT_EQUAL_STRING("Change: $236", r.line(0));
+  TEST_ASSERT_EQUAL_STRING("Dispensing...", r.line(0));
+  TEST_ASSERT_EQUAL_STRING("", r.line(1));
 
   r.bank.finish();
   r.tick(10);
-  TEST_ASSERT_EQUAL_STRING("Take your cash!", r.line(1));
+  TEST_ASSERT_EQUAL_STRING("Take your cash!", r.line(0));
+  TEST_ASSERT_EQUAL_STRING("", r.line(1));
 }
 
 void test_pay_exact_gives_no_change() {
@@ -219,7 +221,7 @@ int main() {
   RUN_TEST(test_withdraw_pays_out_then_returns_to_menu);
   RUN_TEST(test_withdraw_more_than_bank_holds_is_refused);
   RUN_TEST(test_jam_shows_error);
-  RUN_TEST(test_deposit_shows_counted_total);
+  RUN_TEST(test_deposit_returns_to_menu);
   RUN_TEST(test_pay_500_for_264_gives_236_change);
   RUN_TEST(test_pay_exact_gives_no_change);
   RUN_TEST(test_pay_short_returns_the_bills);
