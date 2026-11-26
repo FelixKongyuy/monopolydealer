@@ -208,9 +208,7 @@ void PlayerInterface::finishJob() {
       break;
 
     case Job::Deposit:
-      snprintf(line, sizeof(line), "Deposited $%ld",
-               static_cast<long>(bank_.countedTotal()));
-      showMessage(line, "Thank you!", kDoneMs, Screen::Menu);
+      showMenu();  // no "Deposited $..." screen, straight back to the menu
       break;
 
     case Job::PayCounting: {
@@ -225,9 +223,7 @@ void PlayerInterface::finishJob() {
       } else if (paid == amount_) {
         showMessage("Paid exactly!", "No change", kNoticeMs, Screen::Menu);
       } else {
-        snprintf(line, sizeof(line), "Change: $%ld",
-                 static_cast<long>(paid - amount_));
-        startPayOut(paid - amount_, line, "Dispensing...", Job::PayChange);
+        startPayOut(paid - amount_, "Dispensing...", "", Job::PayChange);
       }
       break;
     }
@@ -237,8 +233,7 @@ void PlayerInterface::finishJob() {
       break;
 
     case Job::PayChange:
-      snprintf(line, sizeof(line), "Change: $%ld", static_cast<long>(paidOut_));
-      showMessage(line, "Take your cash!", kDoneMs, Screen::Menu);
+      showMessage("Take your cash!", "", kDoneMs, Screen::Menu);
       break;
 
     case Job::PassGo:
