@@ -64,4 +64,5 @@ Result makeChange(int32_t amount, const BillCounts& stock, BillCounts& out) {
   }
 
   out = bestPlan;
-  return Result::Ok;
+  return Result::Ok; 
+}
